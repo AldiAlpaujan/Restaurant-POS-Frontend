@@ -1,5 +1,6 @@
-import type { ColTypeDef } from "ag-grid-community";
-import { currency, formatDate, formatNumber } from "./formatters";
+import type { ColTypeDef } from 'ag-grid-community';
+import type { TableStatus } from '@/types/table';
+import { currency, formatDate, formatNumber } from './formatters';
 
 export const columnWidth = {
   shortColumn1: 100,
@@ -16,50 +17,84 @@ export const columnWidth = {
 export const gridColumnTypes: { [key: string]: ColTypeDef } = {
   currency: {
     valueFormatter: (params) => {
-      return currency(params.value) ?? "-";
+      return currency(params.value) ?? '-';
     },
   },
   formatDateTime: {
     valueFormatter: (params) => {
-      return formatDate(params.value, "DD/MM/YYYY HH:mm:ss") ?? "-";
+      return formatDate(params.value, 'DD/MM/YYYY HH:mm:ss') ?? '-';
     },
   },
   formatDate: {
     valueFormatter: (params) => {
-      return formatDate(params.value, "DD/MM/YYYY") ?? "-";
+      return formatDate(params.value, 'DD/MM/YYYY') ?? '-';
     },
   },
   nullable: {
     valueFormatter: (params) => {
-      return params.value ?? "-";
+      return params.value ?? '-';
     },
   },
   upperCase: {
     valueFormatter: (params) => {
-      return params.value?.toUpperCase() ?? "-";
+      return params.value?.toUpperCase() ?? '-';
     },
   },
   numeric: {
     valueFormatter: (params) => {
-      return formatNumber(params.value) ?? "-";
+      return formatNumber(params.value) ?? '-';
     },
   },
   centerAligned: {
-    headerClass: "text-center",
-    cellClass: "text-center",
+    headerClass: 'text-center',
+    cellClass: 'text-center',
   },
   endAligned: {
-    headerClass: "text-end",
-    cellClass: "text-end",
+    headerClass: 'text-end',
+    cellClass: 'text-end',
   },
 };
 
 export const yesAndNoOption = [
-  { label: "Yes", value: true },
-  { label: "No", value: false },
+  { label: 'Yes', value: true },
+  { label: 'No', value: false },
 ];
 
 export const activeStatus = [
-  { label: "AKTIF", value: "ACTIVE", color: "#40C057" },
-  { label: "TIDAK AKTIF", value: "NOT_ACTIVE", color: "#FA5252" },
+  { label: 'AKTIF', value: 'ACTIVE', color: '#40C057' },
+  { label: 'TIDAK AKTIF', value: 'NOT_ACTIVE', color: '#FA5252' },
 ];
+
+export const TABLE_STATUS_CONFIG: Record<
+  TableStatus,
+  { label: string; bg: string; border: string; text: string; dot: string }
+> = {
+  available: {
+    label: 'Available',
+    bg: 'var(--mantine-color-green-1)',
+    border: 'var(--mantine-color-green-4)',
+    text: 'var(--mantine-color-green-8)',
+    dot: 'var(--mantine-color-green-6)',
+  },
+  occupied: {
+    label: 'Occupied',
+    bg: 'var(--mantine-color-red-1)',
+    border: 'var(--mantine-color-red-4)',
+    text: 'var(--mantine-color-red-8)',
+    dot: 'var(--mantine-color-red-6)',
+  },
+  reserved: {
+    label: 'Reserved',
+    bg: 'var(--mantine-color-grape-1)',
+    border: 'var(--mantine-color-grape-4)',
+    text: 'var(--mantine-color-grape-8)',
+    dot: 'var(--mantine-color-grape-6)',
+  },
+  inactive: {
+    label: 'Inactive',
+    bg: 'var(--mantine-color-gray-1)',
+    border: 'var(--mantine-color-gray-4)',
+    text: 'var(--mantine-color-gray-6)',
+    dot: 'var(--mantine-color-gray-4)',
+  },
+};

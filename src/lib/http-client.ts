@@ -18,6 +18,7 @@ export const api = {
 
   // Tables
   getTables: "/tables",
+  updateTableStatus: (id: number) => `/tables/${id}/status`,
 
   // Food Items
   getFoodItems: "/food-items",

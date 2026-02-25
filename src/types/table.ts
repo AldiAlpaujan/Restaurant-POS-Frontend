@@ -1,4 +1,4 @@
-export type TableStatus = "available" | "occupied";
+export type TableStatus = "available" | "occupied" | "reserved" | "inactive";
 
 export type Table = {
   id: number;
