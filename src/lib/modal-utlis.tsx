@@ -1,11 +1,12 @@
-import type { ReactNode } from 'react';
-import { Button, Text } from '@mantine/core';
-import { randomId } from '@mantine/hooks';
-import i18n from '@/i18n/i18n';
-import AppFileViewer, { type FileViewerUrlType } from '@/components/Shared/AppFileView';
-import AppHtmlViewer from '@/components/Shared/AppHtmlViewer';
-import type { ModalSettings } from '@/components/Shared/AppModal';
-import { modalManager } from './modal-manager';
+import type { ReactNode } from "react";
+import { Button, Text } from "@mantine/core";
+import { randomId } from "@mantine/hooks";
+import AppFileViewer, {
+  type FileViewerUrlType,
+} from "@/components/Shared/AppFileView";
+import AppHtmlViewer from "@/components/Shared/AppHtmlViewer";
+import type { ModalSettings } from "@/components/Shared/AppModal";
+import { modalManager } from "./modal-manager";
 
 const success = (props: { title?: string; message: string }): void => {
   const { title, message } = props;
@@ -15,11 +16,11 @@ const success = (props: { title?: string; message: string }): void => {
         <span className="icon-[fluent--checkmark-circle-32-regular] text-primary-filled h-6 w-6"></span>
       </div>
     ),
-    header: title ?? i18n.t('modal.success'),
+    header: title ?? "Berhasil",
     body: message,
     footer: (
       <>
-        <Button onClick={() => modalManager.close(modalId)}>{i18n.t('modal.close')}</Button>
+        <Button onClick={() => modalManager.close(modalId)}>Tutup</Button>
       </>
     ),
   });
@@ -28,11 +29,11 @@ const success = (props: { title?: string; message: string }): void => {
 const info = (props: { title?: string; message: string }): void => {
   const { title, message } = props;
   const modalId = modalManager.open({
-    header: title ?? i18n.t('modal.information'),
+    header: title ?? "Informasi",
     body: message,
     footer: (
       <>
-        <Button onClick={() => modalManager.close(modalId)}>{i18n.t('modal.close')}</Button>
+        <Button onClick={() => modalManager.close(modalId)}>Tutup</Button>
       </>
     ),
   });
@@ -46,12 +47,12 @@ const error = (message: string) => {
         <span className="text-destructive icon-[fluent--warning-28-regular] text-red-6 h-6 w-6"></span>
       </div>
     ),
-    header: i18n.t('modal.error'),
+    header: "Terjadi Kesalahan",
     body: message,
     footer: (
       <>
         <Button variant="filled" onClick={() => modalManager.close(modalId)}>
-          {i18n.t('modal.close')}
+          Tutup
         </Button>
       </>
     ),
@@ -65,13 +66,13 @@ const confirm = (
     noLabel?: string;
     yesIcon?: ReactNode;
     noIcon?: ReactNode;
-  }
+  },
 ): Promise<boolean> => {
   return new Promise<boolean>((resolve) => {
     const modalId = modalManager.open({
       showCloseButton: true,
       closeOnClickOutside: false,
-      header: i18n.t('modal.confirmation'),
+      header: "Konfirmasi",
       body: message,
       footer: (
         <>
@@ -84,17 +85,17 @@ const confirm = (
               resolve(false);
             }}
           >
-            {options?.noLabel ?? i18n.t('modal.cancel')}
+            {options?.noLabel ?? "Batal"}
           </Button>
           <Button
-            variant={'filled'}
+            variant={"filled"}
             leftSection={options?.yesIcon}
             onClick={() => {
               modalManager.close(modalId);
               resolve(true);
             }}
           >
-            {options?.yesLabel ?? i18n.t('modal.yes')}
+            {options?.yesLabel ?? "Ya"}
           </Button>
         </>
       ),
@@ -117,7 +118,7 @@ const loading = (): LoadingDialog => {
             <div className="border-primary-filled absolute left-0 top-0 h-20 w-20 animate-spin rounded-full border-b-8 border-t-8"></div>
           </div>
         </div>
-        <Text>{i18n.t('modal.waitAMoment')}</Text>
+        <Text>{"Mohon tunggu sebentar..."}</Text>
       </div>
     ),
   });
@@ -130,7 +131,7 @@ const loading = (): LoadingDialog => {
 };
 
 const customDialog = (
-  params: { builder: (modalId: string) => React.ReactNode } & ModalSettings
+  params: { builder: (modalId: string) => React.ReactNode } & ModalSettings,
 ) => {
   const modalId = randomId();
   return modalManager.open({
@@ -144,13 +145,13 @@ const customDialog = (
 const fileViewer = (
   urls: FileViewerUrlType[],
   initialUrl?: FileViewerUrlType,
-  useAuthorization?: boolean
+  useAuthorization?: boolean,
 ) => {
   const modalId = randomId();
   return modalManager.open({
     id: modalId,
     showCloseButton: false,
-    size: 'lg',
+    size: "lg",
     fullScreenOnMobile: true,
     children: (
       <AppFileViewer
@@ -168,7 +169,7 @@ const htmlViewer = (title: string, html: string) => {
   return modalManager.open({
     id: modalId,
     showCloseButton: false,
-    size: 'lg',
+    size: "lg",
     fullScreenOnMobile: true,
     children: <AppHtmlViewer modalId={modalId} title={title} html={html} />,
   });
