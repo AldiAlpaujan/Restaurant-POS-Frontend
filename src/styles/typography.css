@@ -1,0 +1,52 @@
+@theme inline {
+  /* FONT SMOOTHING */
+  --webkit-font-smoothing: var(--mantine-webkit-font-smoothing);
+  --moz-font-smoothing: var(--mantine-moz-font-smoothing);
+
+  /* HEADING */
+  --text-h1: var(--mantine-h1-font-size);
+  --leading-h1: var(--mantine-h1-line-height);
+  --font-weight-h1: var(--mantine-h1-font-weight);
+
+  --text-h2: var(--mantine-h2-font-size);
+  --leading-h2: var(--mantine-h2-line-height);
+  --font-weight-h2: var(--mantine-h2-font-weight);
+
+  --text-h3: var(--mantine-h3-font-size);
+  --leading-h3: var(--mantine-h3-line-height);
+  --font-weight-h3: var(--mantine-h3-font-weight);
+
+  --text-h4: var(--mantine-h4-font-size);
+  --leading-h4: var(--mantine-h4-line-height);
+  --font-weight-h4: var(--mantine-h4-font-weight);
+
+  --text-h5: var(--mantine-h5-font-size);
+  --leading-h5: var(--mantine-h5-line-height);
+  --font-weight-h5: var(--mantine-h5-font-weight);
+
+  --text-h6: var(--mantine-h6-font-size);
+  --leading-h6: var(--mantine-h6-line-height);
+  --font-weight-h6: var(--mantine-h6-font-weight);
+
+  /* TYPOGRAPHY */
+  --line-height: var(--mantine-line-height);
+  --font-family: var(--mantine-font-family);
+  --font-family-mono: var(--mantine-font-family-monospace);
+  --font-family-headings: var(--mantine-font-family-headings);
+  --font-weight-heading: var(--mantine-heading-font-weight);
+  --heading-text-wrap: var(--mantine-heading-text-wrap);
+
+  /* FONT SIZE */
+  --text-xs: var(--mantine-font-size-xs);
+  --text-sm: var(--mantine-font-size-sm);
+  --text-base: var(--mantine-font-size-md);
+  --text-lg: var(--mantine-font-size-lg);
+  --text-xl: var(--mantine-font-size-xl);
+
+  /* LINE HEIGHT SCALE */
+  --leading-xs: var(--mantine-line-height-xs);
+  --leading-sm: var(--mantine-line-height-sm);
+  --leading-md: var(--mantine-line-height-md);
+  --leading-lg: var(--mantine-line-height-lg);
+  --leading-xl: var(--mantine-line-height-xl);
+}

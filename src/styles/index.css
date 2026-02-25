@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
+@layer theme, base, mantine, notifications, dates, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities);
+@import '@mantine/core/styles.layer.css' layer(mantine);
+@import '@mantine/notifications/styles.css' layer(notifications);
+@import '@mantine/dates/styles.css' layer(dates);
+
+@import './colors.css';
+@import './colors-palette.css';
+@import './typography.css';
+@import './breakpoint.css';
+@import './spacing.css';
+@import './radius.css';
+@import './shadow.css';
+
+@plugin '@iconify/tailwind4';
+
+@theme inline {
+  /* SCALE & CURSOR */
+  --scale: var(--mantine-scale);
+  --cursor-type: var(--mantine-cursor-type);
+}
+
+@layer base {
+  input[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    display: none;
+  }
+
+  input[type='date'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  input[type='date']::-ms-clear {
+    display: none;
+  }
+
+  h1 {
+    @apply text-h1 leading-h1 font-h1;
+  }
+  h2 {
+    @apply text-h2 leading-h2 font-h2;
+  }
+  h3 {
+    @apply text-h3 leading-h3 font-h3;
+  }
+  h4 {
+    @apply text-h4 leading-h4 font-h4;
+  }
+  h5 {
+    @apply text-h5 leading-h5 font-h5;
+  }
+  h6 {
+    @apply text-h6 leading-h6 font-h6;
+  }
+}

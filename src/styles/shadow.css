@@ -1,0 +1,7 @@
+@theme inline {
+  --shadow-xs: var(--mantine-shadow-xs);
+  --shadow-sm: var(--mantine-shadow-sm);
+  --shadow-md: var(--mantine-shadow-md);
+  --shadow-lg: var(--mantine-shadow-lg);
+  --shadow-xl: var(--mantine-shadow-xl);
+}

@@ -1,0 +1,75 @@
+@theme inline {
+  --color-scheme: var(--mantine-color-scheme);
+  --color-bright: var(--mantine-color-bright);
+  --color-title: var(--mantine-color-text);
+  --color-body: var(--mantine-color-body);
+  --color-error: var(--mantine-color-error);
+  --color-placeholder: var(--mantine-color-placeholder);
+  --color-anchor: var(--mantine-color-anchor);
+  --color-default: var(--mantine-color-default);
+  --color-default-hover: var(--mantine-color-default-hover);
+  --color-default-color: var(--mantine-color-default-color);
+  --color-default-border: var(--mantine-color-default-border);
+  --color-secondary: #5a5a5a;
+  --color-dimmed: var(--mantine-color-dimmed);
+  --color-disabled: var(--mantine-color-disabled);
+  --color-disabled-color: var(--mantine-color-disabled-color);
+  --color-disabled-border: var(--mantine-color-disabled-border);
+  --color-app-shell-border: var(--app-shell-border-color);
+
+  --color-sidebar: oklch(0.985 0 0);
+
+  --color-dark-text: var(--mantine-color-dark-text);
+  --color-dark-filled: var(--mantine-color-dark-filled);
+  --color-dark-filled-hover: var(--mantine-color-dark-filled-hover);
+  --color-dark-light: var(--mantine-color-dark-light);
+  --color-dark-light-hover: var(--mantine-color-dark-light-hover);
+  --color-dark-light-color: var(--mantine-color-dark-light-color);
+  --color-dark-outline: var(--mantine-color-dark-outline);
+  --color-dark-outline-hover: var(--mantine-color-dark-outline-hover);
+
+  --color-gray-text: var(--mantine-color-gray-text);
+  --color-gray-filled: var(--mantine-color-gray-filled);
+  --color-gray-filled-hover: var(--mantine-color-gray-filled-hover);
+  --color-gray-light: var(--mantine-color-gray-light);
+  --color-gray-light-hover: var(--mantine-color-gray-light-hover);
+  --color-gray-light-color: var(--mantine-color-gray-light-color);
+  --color-gray-outline: var(--mantine-color-gray-outline);
+  --color-gray-outline-hover: var(--mantine-color-gray-outline-hover);
+
+  --color-red-text: var(--mantine-color-red-text);
+  --color-red-filled: var(--mantine-color-red-filled);
+  --color-red-filled-hover: var(--mantine-color-red-filled-hover);
+  --color-red-light: var(--mantine-color-red-light);
+  --color-red-light-hover: var(--mantine-color-red-light-hover);
+  --color-red-light-color: var(--mantine-color-red-light-color);
+  --color-red-outline: var(--mantine-color-red-outline);
+  --color-red-outline-hover: var(--mantine-color-red-outline-hover);
+
+  --color-green-text: var(--mantine-color-green-text);
+  --color-green-filled: var(--mantine-color-green-filled);
+  --color-green-filled-hover: var(--mantine-color-green-filled-hover);
+  --color-green-light: var(--mantine-color-green-light);
+  --color-green-light-hover: var(--mantine-color-green-light-hover);
+  --color-green-light-color: var(--mantine-color-green-light-color);
+  --color-green-outline: var(--mantine-color-green-outline);
+  --color-green-outline-hover: var(--mantine-color-green-outline-hover);
+
+  --color-yellow-text: var(--mantine-color-yellow-text);
+  --color-yellow-filled: var(--mantine-color-yellow-filled);
+  --color-yellow-filled-hover: var(--mantine-color-yellow-filled-hover);
+  --color-yellow-light: var(--mantine-color-yellow-light);
+  --color-yellow-light-hover: var(--mantine-color-yellow-light-hover);
+  --color-yellow-light-color: var(--mantine-color-yellow-light-color);
+  --color-yellow-outline: var(--mantine-color-yellow-outline);
+  --color-yellow-outline-hover: var(--mantine-color-yellow-outline-hover);
+
+  --color-orange-text: var(--mantine-color-orange-text);
+  --color-orange-filled: var(--mantine-color-orange-filled);
+  --color-orange-filled-hover: var(--mantine-color-orange-filled-hover);
+  --color-orange-light: var(--mantine-color-orange-light);
+  --color-orange-light-hover: var(--mantine-color-orange-light-hover);
+  --color-orange-light-color: var(--mantine-color-orange-light-color);
+  --color-orange-outline: var(--mantine-color-orange-outline);
+  --color-orange-outline-hover: var(--mantine-color-orange-outline-hover);
+}

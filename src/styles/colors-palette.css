@@ -1,0 +1,96 @@
+@theme inline {
+  /* BASE COLORS */
+  --color-white: var(--mantine-color-white);
+  --color-black: var(--mantine-color-black);
+
+  /* PRIMARY COLOR */
+  --color-primary-filled: var(--mantine-primary-color-filled);
+  --color-primary-filled-hover: var(--mantine-primary-color-filled-hover);
+  --color-primary-light: var(--mantine-primary-color-light);
+  --color-primary-light-hover: var(--mantine-primary-color-light-hover);
+  --color-primary-light-color: var(--mantine-primary-color-light-color);
+
+  /* PRIMARY COLOR SCALE */
+  --color-primary-0: var(--mantine-primary-color-0);
+  --color-primary-1: var(--mantine-primary-color-1);
+  --color-primary-2: var(--mantine-primary-color-2);
+  --color-primary-3: var(--mantine-primary-color-3);
+  --color-primary-4: var(--mantine-primary-color-4);
+  --color-primary-5: var(--mantine-primary-color-5);
+  --color-primary-6: var(--mantine-primary-color-6);
+  --color-primary-7: var(--mantine-primary-color-7);
+  --color-primary-8: var(--mantine-primary-color-8);
+  --color-primary-9: var(--mantine-primary-color-9);
+
+  /* PALETTE: DARK */
+  --color-dark-0: var(--mantine-color-dark-0);
+  --color-dark-1: var(--mantine-color-dark-1);
+  --color-dark-2: var(--mantine-color-dark-2);
+  --color-dark-3: var(--mantine-color-dark-3);
+  --color-dark-4: var(--mantine-color-dark-4);
+  --color-dark-5: var(--mantine-color-dark-5);
+  --color-dark-6: var(--mantine-color-dark-6);
+  --color-dark-7: var(--mantine-color-dark-7);
+  --color-dark-8: var(--mantine-color-dark-8);
+  --color-dark-9: var(--mantine-color-dark-9);
+
+  /* PALETTE: GRAY */
+  --color-gray-0: var(--mantine-color-gray-0);
+  --color-gray-1: var(--mantine-color-gray-1);
+  --color-gray-2: var(--mantine-color-gray-2);
+  --color-gray-3: var(--mantine-color-gray-3);
+  --color-gray-4: var(--mantine-color-gray-4);
+  --color-gray-5: var(--mantine-color-gray-5);
+  --color-gray-6: var(--mantine-color-gray-6);
+  --color-gray-7: var(--mantine-color-gray-7);
+  --color-gray-8: var(--mantine-color-gray-8);
+  --color-gray-9: var(--mantine-color-gray-9);
+
+  /* PALETTE: RED */
+  --color-red-0: var(--mantine-color-red-0);
+  --color-red-1: var(--mantine-color-red-1);
+  --color-red-2: var(--mantine-color-red-2);
+  --color-red-3: var(--mantine-color-red-3);
+  --color-red-4: var(--mantine-color-red-4);
+  --color-red-5: var(--mantine-color-red-5);
+  --color-red-6: var(--mantine-color-red-6);
+  --color-red-7: var(--mantine-color-red-7);
+  --color-red-8: var(--mantine-color-red-8);
+  --color-red-9: var(--mantine-color-red-9);
+
+  /* PALETTE: GREEN */
+  --color-green-0: var(--mantine-color-green-0);
+  --color-green-1: var(--mantine-color-green-1);
+  --color-green-2: var(--mantine-color-green-2);
+  --color-green-3: var(--mantine-color-green-3);
+  --color-green-4: var(--mantine-color-green-4);
+  --color-green-5: var(--mantine-color-green-5);
+  --color-green-6: var(--mantine-color-green-6);
+  --color-green-7: var(--mantine-color-green-7);
+  --color-green-8: var(--mantine-color-green-8);
+  --color-green-9: var(--mantine-color-green-9);
+
+  /* PALETTE: YELLOW */
+  --color-yellow-0: var(--mantine-color-yellow-0);
+  --color-yellow-1: var(--mantine-color-yellow-1);
+  --color-yellow-2: var(--mantine-color-yellow-2);
+  --color-yellow-3: var(--mantine-color-yellow-3);
+  --color-yellow-4: var(--mantine-color-yellow-4);
+  --color-yellow-5: var(--mantine-color-yellow-5);
+  --color-yellow-6: var(--mantine-color-yellow-6);
+  --color-yellow-7: var(--mantine-color-yellow-7);
+  --color-yellow-8: var(--mantine-color-yellow-8);
+  --color-yellow-9: var(--mantine-color-yellow-9);
+
+  /* PALETTE: ORANGE */
+  --color-orange-0: var(--mantine-color-orange-0);
+  --color-orange-1: var(--mantine-color-orange-1);
+  --color-orange-2: var(--mantine-color-orange-2);
+  --color-orange-3: var(--mantine-color-orange-3);
+  --color-orange-4: var(--mantine-color-orange-4);
+  --color-orange-5: var(--mantine-color-orange-5);
+  --color-orange-6: var(--mantine-color-orange-6);
+  --color-orange-7: var(--mantine-color-orange-7);
+  --color-orange-8: var(--mantine-color-orange-8);
+  --color-orange-9: var(--mantine-color-orange-9);
+}
