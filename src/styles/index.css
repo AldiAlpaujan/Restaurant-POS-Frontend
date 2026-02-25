@@ -63,3 +63,45 @@
     @apply text-h6 leading-h6 font-h6;
   }
 }
+
+/* AG GRID */
+.ag-root-wrapper {
+  border-left: 0;
+  border-right: 0;
+}
+
+.ag-grid-with-border .ag-root-wrapper {
+  border-left: 1px solid #d1d5db;
+  border-right: 1px solid #d1d5db;
+}
+
+.ag-cell-wrapper {
+  height: 100%;
+}
+
+.ag-overlay {
+  pointer-events: visible;
+}
+
+.ag-header-cell.text-center {
+  .ag-header-cell-label {
+    justify-content: center;
+  }
+}
+
+.ag-header-cell.text-end {
+  .ag-header-cell-label {
+    justify-content: end;
+  }
+}
+
+/* DOC VIEWER */
+#react-doc-viewer {
+  background-color: transparent;
+  border: 0;
+}
+
+#react-doc-viewer #proxy-renderer {
+  height: 100%;
+  max-height: 82vh;
+}

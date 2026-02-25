@@ -12,6 +12,15 @@ const variantColorResolver: VariantColorsResolver = (input) => {
     };
   }
 
+  if (input.variant === 'grid-action-view') {
+    return {
+      background: rgba('var(--mantine-color-gray-filled)', 0.12),
+      hover: rgba('var(--mantine-color-gray-filled)', 0.12),
+      color: 'var(--mantine-color-gray-filled)',
+      border: 'none',
+    };
+  }
+
   if (input.variant === 'grid-action-edit') {
     return {
       background: rgba('var(--mantine-primary-color-filled)', 0.12),

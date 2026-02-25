@@ -140,13 +140,13 @@ export default function useDataGridSource<TData>({
       params: {
         search: searchFilter !== '' ? searchFilter : null,
         page: pagination.pageIndex,
-        rowsPerPage: pagination.pageSize,
-        sortBy: sortBy,
-        sortDesc: sortDesc,
+        rows_per_page: pagination.pageSize,
+        sort_by: sortBy,
+        sort_desc: sortDesc,
         ...otherFilter,
         ...queryParam,
       },
-      paramsSerializer: (params) => queryString.stringify(params),
+      paramsSerializer: (params) => queryString.stringify(params, { arrayFormat: 'bracket' }),
     };
   }, [sorting, searchFilter, pagination.pageIndex, pagination.pageSize, filters]);
 
@@ -161,30 +161,6 @@ export default function useDataGridSource<TData>({
     controllerRef.current = controller;
 
     try {
-      // TODO: DELETE THIS AFTER PRODUCTION READY
-      if (true) {
-        resetData();
-        setError(false);
-        setLoading(true);
-        const res = await fetch(url, {
-          signal: controller.signal,
-        });
-
-        const data = await res.json();
-
-        // mock header & pagination
-        setHeader({} as AxiosResponseHeaders);
-        setPagination((draft) => {
-          draft.pageTotal = 1;
-        });
-
-        resolvers.forEach((resolver) => resolver());
-        setData(data);
-        onDataAssign?.(data.length);
-        setLoading(false);
-        return;
-      }
-
       resetData();
       setError(false);
       setLoading(true);
@@ -194,12 +170,14 @@ export default function useDataGridSource<TData>({
       });
       setHeader(res.headers as AxiosResponseHeaders);
       resolvers.forEach((resolver) => resolver());
+      const responseData = res.data?.data ?? res.data;
+      const totalRowCount = res.data?.total_row_count ?? responseData.length;
       setPagination((draft) => {
-        const headerTotal = res.headers['x-total-count'];
-        draft.pageTotal = Math.ceil(headerTotal / pagination.pageSize);
+        draft.pageTotal = Math.ceil(totalRowCount / pagination.pageSize) || 1;
       });
       setLoading(false);
-      setData(res.data);
+      setData(responseData);
+      onDataAssign?.(responseData.length);
     } catch (err) {
       parseError(err, () => {
         if (!axios.isCancel(err)) {
