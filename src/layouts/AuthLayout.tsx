@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { Text } from '@mantine/core';
-import { useInterval } from '@mantine/hooks';
-import { Outlet } from 'react-router';
+import { useEffect, useState } from "react";
+import { Text } from "@mantine/core";
+import { useInterval } from "@mantine/hooks";
+import { Outlet } from "react-router";
 
 export default function AuthLayout() {
   return (
     <main className="grid h-lvh grid-cols-12">
-      <AuthBanner />
       <AuthForm />
+      <AuthBanner />
     </main>
   );
 }
@@ -15,28 +15,31 @@ export default function AuthLayout() {
 const AuthBanner = () => {
   const [activeContent, setActiveContent] = useState<number>(0);
   const [contentIsHover, setContentIsHover] = useState<boolean>(false);
-  const interval = useInterval(() => setActiveContent((e) => (e === 3 ? 0 : e + 1)), 5000);
+  const interval = useInterval(
+    () => setActiveContent((e) => (e === 3 ? 0 : e + 1)),
+    5000,
+  );
 
   const contents = [
     {
-      title: 'Proses Pengadaan Lebih Transparan',
+      title: "Kelola Pesanan dengan Mudah",
       description:
-        'Kelola seluruh proses e-procurement secara digital dan terstruktur. Setiap tahapan dapat dipantau secara real-time untuk meningkatkan transparansi dan akuntabilitas pengadaan.',
+        "Terima dan proses pesanan meja secara cepat dan akurat. Tampilan intuitif membantu staf melayani pelanggan lebih efisien tanpa antrian panjang.",
     },
     {
-      title: 'Pengadaan Lebih Cepat dan Terpusat',
+      title: "Pantau Penjualan Secara Real-Time",
       description:
-        'Mulai dari pengajuan kebutuhan, evaluasi, hingga persetujuan dilakukan dalam satu sistem terpusat. Proses lebih cepat, efisien, dan minim hambatan operasional.',
+        "Lihat laporan penjualan harian, mingguan, dan bulanan langsung dari dashboard. Ambil keputusan bisnis berdasarkan data yang selalu up-to-date.",
     },
     {
-      title: 'Keamanan dan Kepatuhan Terjamin',
+      title: "Manajemen Menu yang Fleksibel",
       description:
-        'Sistem dirancang dengan standar keamanan yang andal serta audit trail yang lengkap. Mendukung kepatuhan terhadap kebijakan internal dan regulasi pengadaan perusahaan.',
+        "Tambah, ubah, atau nonaktifkan menu kapan saja dengan mudah. Atur harga, kategori, dan ketersediaan stok dalam satu tempat.",
     },
     {
-      title: 'Kontrol Penuh dalam Satu Dashboard',
+      title: "Transaksi Cepat dan Akurat",
       description:
-        'Pantau status pengadaan, kinerja vendor, dan laporan secara real-time melalui dashboard terpadu. Membantu pengambilan keputusan yang lebih cepat dan tepat.',
+        "Proses pembayaran tunai maupun non-tunai dengan cepat dan minim kesalahan. Struk otomatis memastikan setiap transaksi tercatat dengan rapi.",
     },
   ];
 
@@ -66,16 +69,21 @@ const AuthBanner = () => {
 
   return (
     <div className="col-span-6 hidden md:block xl:col-span-8">
-      <div className="relative h-lvh w-full overflow-clip xl:p-12 xl:pr-0">
+      <div className="relative h-lvh w-full overflow-clip xl:p-12 xl:pl-0">
         <img
-          src="https://images.unsplash.com/photo-1554232456-8727aae0cfa4?q=80&w=735&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=735&auto=format&fit=crop"
           className="h-full w-full object-cover xl:rounded-2xl"
         />
-        <div className="absolute inset-0 z-10 overflow-clip xl:m-12 xl:mr-0 xl:rounded-2xl">
+        <div className="absolute inset-0 z-10 overflow-clip xl:m-12 xl:ml-0 xl:rounded-2xl">
           <div className="bg-linear-to-t h-full from-black/70 via-black/40 to-white/0">
             <div className="flex h-full flex-col justify-end p-20 text-white">
-              <div onMouseEnter={mouseEnterContent} onMouseLeave={mouseLeaveContent}>
-                <Text className="mb-1 text-2xl font-bold">{contents[activeContent].title}</Text>
+              <div
+                onMouseEnter={mouseEnterContent}
+                onMouseLeave={mouseLeaveContent}
+              >
+                <Text className="mb-1 text-2xl font-bold">
+                  {contents[activeContent].title}
+                </Text>
                 <Text className="mb-6 text-white/70 xl:max-w-[70%]">
                   {contents[activeContent].description}
                 </Text>
@@ -86,7 +94,7 @@ const AuthBanner = () => {
                       <div
                         key={key}
                         onClick={() => onContentDotClick(key)}
-                        className={`mr-1.5 cursor-pointer ${active ? 'h-2.5 w-16 bg-white' : 'size-2.5 bg-white/60'} rounded-2xl transition-all duration-500 ease-in-out`}
+                        className={`mr-1.5 cursor-pointer ${active ? "h-2.5 w-16 bg-white" : "size-2.5 bg-white/60"} rounded-2xl transition-all duration-500 ease-in-out`}
                       />
                     );
                   })}

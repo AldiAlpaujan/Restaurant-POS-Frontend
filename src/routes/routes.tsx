@@ -1,5 +1,6 @@
-import { createBrowserRouter } from "react-router";
-import MainLayout from "@/layouts/MainLayout";
+import { createBrowserRouter, Navigate } from "react-router";
+import AppLayout from "@/layouts/AppLayout";
+import AuthLayout from "@/layouts/AuthLayout";
 
 export function lazyPage(
   importFn: () => Promise<{ default: React.ComponentType<any> }>,
@@ -10,14 +11,24 @@ export function lazyPage(
   };
 }
 
-const router =  createBrowserRouter([
+const router = createBrowserRouter([
   {
-    path: "/login",
-    lazy: lazyPage(() => import("@/pages/auth/LoginPage")),
+    path: "/auth",
+    Component: AuthLayout,
+    children: [
+      {
+        index: true,
+        element: <Navigate to={"login"} />,
+      },
+      {
+        path: "login",
+        lazy: lazyPage(() => import("@/pages/auth/LoginPage")),
+      },
+    ],
   },
   {
     path: "/",
-    element: <MainLayout />,
+    Component: AppLayout,
     children: [
       {
         index: true,
