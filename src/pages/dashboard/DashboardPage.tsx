@@ -12,7 +12,7 @@ const STATUS_CONFIG = {
   occupied: { label: 'Occupied', color: 'red' },
 } as const;
 
-export default function DashboardPage() {
+export default function Page() {
   const navigate = useNavigate();
   const [tables, setTables] = useState<Table[]>([]);
   const [viewState, setViewState] = useState<AppViewStateType>('loading');
@@ -49,8 +49,8 @@ export default function DashboardPage() {
 
   return (
     <AppPage hasAccess title="Dashboard | POS" breadcrumbs={[{ title: 'Dashboard' }]}>
-      <div className="p-4 lg:p-6">
-        <AppViewState viewState={viewState} callBackError={fetchTables}>
+      <AppViewState viewState={viewState} callBackError={fetchTables}>
+        <div className="p-4 lg:p-6">
           {/* Quick Stats */}
           <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
             <StatCard label="Total Meja" value={tables.length} color="blue" />
@@ -76,8 +76,8 @@ export default function DashboardPage() {
               <TableCard key={table.id} table={table} onClick={() => handleTableClick(table)} />
             ))}
           </SimpleGrid>
-        </AppViewState>
-      </div>
+        </div>
+      </AppViewState>
     </AppPage>
   );
 }
