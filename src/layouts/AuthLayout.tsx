@@ -46,7 +46,6 @@ const AuthBanner = () => {
   function onContentDotClick(index: number) {
     interval.stop();
     setActiveContent(index);
-    console.info(contentIsHover);
     if (!contentIsHover) interval.start();
   }
 

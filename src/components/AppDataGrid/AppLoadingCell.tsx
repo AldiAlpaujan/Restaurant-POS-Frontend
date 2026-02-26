@@ -11,5 +11,5 @@ export default function AppLoadingCell(props: {
   }
   return new Promise((resolve) => {
     resolvers.push(() => resolve(''));
-  }).then(() => console.info(cellParams.value));
+  }).then(() => {});
 }
