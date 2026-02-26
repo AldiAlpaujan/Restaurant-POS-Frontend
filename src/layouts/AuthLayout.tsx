@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Text } from "@mantine/core";
 import { useInterval } from "@mantine/hooks";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
+import authToken from "@/lib/auth-token";
 
 export default function AuthLayout() {
   return (
@@ -59,9 +60,13 @@ const AuthBanner = () => {
     setContentIsHover(false);
   }
 
-  useEffect(() => {
-    // TODO: add function to redirect to home if user already login
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (authToken.isLogged()) {
+      navigate('/');
+      return;
+    }
     interval.start();
     return interval.stop();
   }, []);

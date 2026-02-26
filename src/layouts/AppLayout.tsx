@@ -1,23 +1,46 @@
-import { Outlet, useNavigate } from "react-router";
-import AppWrapper from "@/components/AppLayout/Wrapper/AppWrapper";
-import AppLayoutProvider from "@/stores/AppLayoutContext";
-import { sidebarMenu, userMenu } from "./menu";
+import { Outlet, useNavigate } from 'react-router';
+import AppWrapper from '@/components/AppLayout/Wrapper/AppWrapper';
+import authToken from '@/lib/auth-token';
+import client, { api } from '@/lib/http-client';
+import AppLayoutProvider, { useAppLayoutContext } from '@/stores/AppLayoutContext';
+import { sidebarMenu, userMenu } from './menu';
+
+function AppLayoutInner() {
+  const navigate = useNavigate();
+  const isLogged = authToken.isLogged();
+  const { profile, profileLoading } = useAppLayoutContext();
+
+  async function onLogout() {
+    try {
+      await client().post(api.logout);
+    } catch {
+      // ignore — clear token regardless
+    }
+    authToken.clearToken();
+    navigate('/auth/login');
+  }
+
+  const visibleMenu = isLogged ? sidebarMenu : sidebarMenu.filter((m) => m.url === '/');
+  const visibleUserMenu = isLogged ? userMenu : [];
+
+  return (
+    <AppWrapper
+      userMenu={visibleUserMenu}
+      isLoading={profileLoading}
+      userName={profile?.name ?? 'Guest'}
+      userEmail={profile?.email ?? 'Tidak login'}
+      sideBarMenu={visibleMenu}
+      onLogout={isLogged ? onLogout : () => navigate('/auth/login')}
+    >
+      <Outlet />
+    </AppWrapper>
+  );
+}
 
 export default function AppLayout() {
-  const navigate = useNavigate();
   return (
     <AppLayoutProvider>
-      <AppWrapper
-        userMenu={userMenu}
-        isLoading={false}
-        userAvatar="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-8.png"
-        userName={"Harriette Spoonlicker"}
-        userEmail={"hspoonlicker@outlook.com"}
-        sideBarMenu={sidebarMenu}
-        onLogout={() => navigate("/auth/login")}
-      >
-        <Outlet />
-      </AppWrapper>
+      <AppLayoutInner />
     </AppLayoutProvider>
   );
 }
