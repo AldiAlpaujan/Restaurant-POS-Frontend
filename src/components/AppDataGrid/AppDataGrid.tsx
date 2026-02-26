@@ -12,6 +12,7 @@ import AppGridFooter from './AppGridFooter';
 
 export interface AppDataGridSettings {
   showHeader?: boolean;
+  showSearch?: boolean;
   showFilter?: boolean;
   withBorder?: boolean;
 
@@ -67,7 +68,7 @@ export default function AppDataGrid(props: AppDataGridProps) {
             {settings.leftAction}
           </div>
           <div className="flex items-center justify-center gap-2.5">
-            <AppSearchFilter onChange={settings.onSearch} />
+            {settings.showSearch === true && <AppSearchFilter onChange={settings.onSearch} />}
             <ActionIcon variant="light" size={'lg'} onClick={settings.onRefresh}>
               <IconRefresh size={20} />
             </ActionIcon>

@@ -1,4 +1,5 @@
 import type { ColTypeDef } from 'ag-grid-community';
+import type { OrderStatus } from '@/types/order';
 import type { TableStatus } from '@/types/table';
 import { currency, formatDate, formatNumber } from './formatters';
 
@@ -64,6 +65,12 @@ export const activeStatus = [
   { label: 'AKTIF', value: 'ACTIVE', color: '#40C057' },
   { label: 'TIDAK AKTIF', value: 'NOT_ACTIVE', color: '#FA5252' },
 ];
+
+export const ORDER_STATUS_CONFIG: Record<OrderStatus, { label: string; color: string }> = {
+  open: { label: 'Open', color: 'green' },
+  reserved: { label: 'Reserved', color: 'grape' },
+  closed: { label: 'Closed', color: 'gray' },
+};
 
 export const TABLE_STATUS_CONFIG: Record<
   TableStatus,

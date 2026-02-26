@@ -36,6 +36,7 @@ export default function useDataGrid<TData>({
   rowSelection,
 
   showHeader = true,
+  showSearch = true,
   leftAction,
   rightAction,
   showFilter = false,
@@ -138,6 +139,7 @@ export default function useDataGrid<TData>({
     // AppGrid Settings
     settings: {
       showHeader,
+      showSearch,
       leftAction,
       rightAction,
       showFilter,
