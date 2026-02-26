@@ -3,7 +3,7 @@ import type { Order } from '@/types/order';
 
 export type CreateOrderPayload = {
   table_id: number;
-  status: 'occupied' | 'reserved';
+  table_status: 'occupied' | 'reserved';
   items: ItemsPayload;
 };
 
@@ -54,6 +54,16 @@ export class OrderService {
   }
 
   static async closeOrder(id: number): Promise<void> {
-    await client().post(api.closeOrder(id));
+    await client().put(api.closeOrder(id));
+  }
+
+  static async downloadReceipt(id: number): Promise<void> {
+    const res = await client().get(api.getOrderReceipt(id), { responseType: 'blob' });
+    const url = URL.createObjectURL(res.data as Blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `receipt-order-${id}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 }

@@ -11,6 +11,7 @@ import {
   Title,
 } from '@mantine/core';
 import {
+  IconCheck,
   IconMinus,
   IconNotes,
   IconPlus,
@@ -27,6 +28,7 @@ import type { AppViewStateType } from '@/layouts/AppViewState';
 import AppViewState from '@/layouts/AppViewState';
 import { currency } from '@/lib/formatters';
 import { parseError } from '@/lib/http-handlers';
+import { modalUtils } from '@/lib/modal-utlis';
 import { toastUtils } from '@/lib/toast-utils';
 import type { FoodItem } from '@/types/food-item';
 import type { Table } from '@/types/table';
@@ -35,6 +37,8 @@ type CartItem = {
   foodItem: FoodItem;
   quantity: number;
   notes: string | null;
+  // true = already stored in DB (came from existing order), false = newly added this session
+  isExisting: boolean;
 };
 
 export default function Page() {
@@ -63,6 +67,7 @@ export default function Page() {
   // Loading
   const [viewState, setViewState] = useState<AppViewStateType>('loading');
   const [submitting, setSubmitting] = useState(false);
+  const [closing, setClosing] = useState(false);
 
   // Notes toggle
   const [openNotes, setOpenNotes] = useState<Set<number>>(new Set());
@@ -84,56 +89,11 @@ export default function Page() {
       setCategories(['Semua', ...cats]);
       setAvailableTables(tables);
 
-      // From dashboard: table pre-selected
-      if (tableIdParam) {
-        const tableId = Number(tableIdParam);
-        const table = await TableService.getTableById(tableId);
-        if (table) {
-          setSelectedTable(table);
-          setTableIsLocked(true);
-          if (table.status === 'reserved') {
-            setTableStatus('reserved');
-          }
-        }
-
-        // Check for existing active order on this table
-        const existingOrder = await OrderService.getOrderFromTable(tableId);
-        if (existingOrder) {
-          setExistingOrderId(existingOrder.id);
-          setTableStatus(existingOrder.status === 'reserved' ? 'reserved' : 'occupied');
-
-          setCart(
-            existingOrder.items.map((oi) => ({
-              foodItem: {
-                id: oi.food_item.id,
-                name: oi.food_item.name,
-                price: oi.food_item.price,
-                category: oi.food_item.category,
-                description: null,
-                is_available: true,
-                deleted_at: null,
-                created_at: '',
-                updated_at: '',
-              },
-              quantity: oi.quantity,
-              notes: null,
-            }))
-          );
-        }
-      }
-
-      // From order list: existing order
-      if (orderIdParam && !tableIdParam) {
-        const orderId = Number(orderIdParam);
-        const existingOrder = await OrderService.getOrderDetail(orderId);
-        setExistingOrderId(orderId);
+      function loadOrderIntoCart(
+        existingOrder: Awaited<ReturnType<typeof OrderService.getOrderDetail>>
+      ) {
+        setExistingOrderId(existingOrder.id);
         setTableStatus(existingOrder.status === 'reserved' ? 'reserved' : 'occupied');
-
-        const tableInList = tables.find((t) => t.id === existingOrder.table_id);
-        if (tableInList) {
-          setSelectedTable(tableInList);
-        }
-
         setCart(
           existingOrder.items.map((oi) => ({
             foodItem: {
@@ -149,8 +109,35 @@ export default function Page() {
             },
             quantity: oi.quantity,
             notes: null,
+            isExisting: true,
           }))
         );
+      }
+
+      // From dashboard: table pre-selected, try to load existing order
+      if (tableIdParam) {
+        const tableId = Number(tableIdParam);
+        const [table, existingOrder] = await Promise.all([
+          TableService.getTableById(tableId),
+          OrderService.getOrderFromTable(tableId),
+        ]);
+        if (table) {
+          setSelectedTable(table);
+          setTableIsLocked(true);
+          if (table.status === 'reserved') setTableStatus('reserved');
+        }
+        if (existingOrder) loadOrderIntoCart(existingOrder);
+      }
+
+      // From order list: load by order_id
+      if (orderIdParam && !tableIdParam) {
+        const existingOrder = await OrderService.getOrderDetail(Number(orderIdParam));
+        loadOrderIntoCart(existingOrder);
+        const table = await TableService.getTableById(existingOrder.table_id);
+        if (table) {
+          setSelectedTable(table);
+          setTableIsLocked(true);
+        }
       }
     } catch (error) {
       parseError(error);
@@ -159,15 +146,20 @@ export default function Page() {
     }
   }
 
+  // Block food only for brand-new reserved orders (existing reserved orders can add items)
+  const isReserved = tableStatus === 'reserved';
+  const blockFood = isReserved && !existingOrderId;
+
   function addToCart(foodItem: FoodItem) {
+    if (blockFood) return;
     setCart((prev) => {
-      const existing = prev.find((c) => c.foodItem.id === foodItem.id);
-      if (existing) {
+      const newEntry = prev.find((c) => c.foodItem.id === foodItem.id && !c.isExisting);
+      if (newEntry) {
         return prev.map((c) =>
-          c.foodItem.id === foodItem.id ? { ...c, quantity: c.quantity + 1 } : c
+          c.foodItem.id === foodItem.id && !c.isExisting ? { ...c, quantity: c.quantity + 1 } : c
         );
       }
-      return [...prev, { foodItem, quantity: 1, notes: null }];
+      return [...prev, { foodItem, quantity: 1, notes: null, isExisting: false }];
     });
   }
 
@@ -204,6 +196,13 @@ export default function Page() {
     );
   }
 
+  function handleStatusChange(val: string | null) {
+    setTableStatus((val as 'occupied' | 'reserved') ?? 'occupied');
+  }
+
+  // Only newly added items (not from existing order) go to addOrderItems
+  const newItems = cart.filter((c) => !c.isExisting);
+
   const totalPrice = cart.reduce((sum, c) => sum + Number(c.foodItem.price) * c.quantity, 0);
 
   const filteredFoodItems = foodItems.filter((f) => {
@@ -217,36 +216,79 @@ export default function Page() {
       toastUtils.error({ message: 'Pilih meja terlebih dahulu' });
       return;
     }
-    if (cart.length === 0) {
-      toastUtils.error({ message: 'Tambahkan menu terlebih dahulu' });
-      return;
-    }
 
-    setSubmitting(true);
-    try {
-      let orderId = existingOrderId;
-
-      if (!orderId) {
-        const newOrder = await OrderService.createOrder({
+    if (existingOrderId) {
+      // Edit mode: only send newly added items
+      if (newItems.length === 0) {
+        toastUtils.error({ message: 'Tidak ada menu baru untuk ditambahkan' });
+        return;
+      }
+      setSubmitting(true);
+      try {
+        await OrderService.addOrderItems(existingOrderId, {
+          items: newItems.map((c) => ({
+            food_item_id: c.foodItem.id,
+            quantity: c.quantity,
+            notes: c.notes ?? undefined,
+          })),
+        });
+        toastUtils.success({ message: 'Item berhasil ditambahkan ke pesanan' });
+        navigate('/order');
+      } catch (error) {
+        parseError(error);
+      } finally {
+        setSubmitting(false);
+      }
+    } else {
+      // Create mode — reserved allows empty items
+      if (!blockFood && cart.length === 0) {
+        toastUtils.error({ message: 'Tambahkan menu terlebih dahulu' });
+        return;
+      }
+      setSubmitting(true);
+      try {
+        await OrderService.createOrder({
           table_id: selectedTable.id,
-          status: tableStatus,
+          table_status: tableStatus,
           items: cart.map((c) => ({
             food_item_id: c.foodItem.id,
             quantity: c.quantity,
             notes: c.notes ?? undefined,
           })),
         });
-        orderId = newOrder.id;
+        toastUtils.success({ message: 'Pesanan berhasil dibuat' });
+        navigate('/order');
+      } catch (error) {
+        parseError(error);
+      } finally {
+        setSubmitting(false);
       }
+    }
+  }
 
-      toastUtils.success({ message: 'Pesanan berhasil disimpan' });
+  async function handleCloseOrder() {
+    if (!existingOrderId) return;
+
+    const confirmed = await modalUtils.confirm('Apakah Anda yakin ingin menutup pesanan ini?');
+    if (!confirmed) return;
+
+    setClosing(true);
+    try {
+      await OrderService.closeOrder(existingOrderId);
+      await OrderService.downloadReceipt(existingOrderId);
+      toastUtils.success({ message: 'Pesanan berhasil ditutup' });
       navigate('/order');
     } catch (error) {
       parseError(error);
     } finally {
-      setSubmitting(false);
+      setClosing(false);
     }
   }
+
+  const submitLabel = existingOrderId ? 'Tambah Item' : 'Buat Pesanan';
+  const submitDisabled = existingOrderId
+    ? newItems.length === 0
+    : !selectedTable || (!blockFood && cart.length === 0);
 
   return (
     <AppPage
@@ -287,7 +329,11 @@ export default function Page() {
 
               {/* Food Items Grid */}
               <ScrollArea className="flex-1" type="auto">
-                {filteredFoodItems.length === 0 ? (
+                {blockFood ? (
+                  <div className="flex h-40 items-center justify-center text-gray-400">
+                    <Text size="sm">Menu tidak dapat dipilih untuk pesanan Reserved baru</Text>
+                  </div>
+                ) : filteredFoodItems.length === 0 ? (
                   <div className="flex h-40 items-center justify-center text-gray-400">
                     <Text size="sm">Tidak ada menu ditemukan</Text>
                   </div>
@@ -365,9 +411,7 @@ export default function Page() {
                       { value: 'reserved', label: 'Reserved' },
                     ]}
                     value={tableStatus}
-                    onChange={(val) =>
-                      setTableStatus((val as 'occupied' | 'reserved') ?? 'occupied')
-                    }
+                    onChange={handleStatusChange}
                     disabled={!!existingOrderId}
                   />
                 </div>
@@ -386,50 +430,64 @@ export default function Page() {
                       <div key={item.foodItem.id} className="px-1 py-2">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0 flex-1">
-                            <Text size="sm" fw={500} lineClamp={1}>
-                              {item.foodItem.name}
-                            </Text>
+                            <div className="flex items-center gap-1">
+                              <Text size="sm" fw={500} lineClamp={1}>
+                                {item.foodItem.name}
+                              </Text>
+                              {item.isExisting && (
+                                <IconCheck size={12} className="shrink-0 text-green-500" />
+                              )}
+                            </div>
                             <Text size="xs" c="dimmed">
                               {currency(item.foodItem.price)}
                             </Text>
                           </div>
-                          <ActionIcon
-                            variant="subtle"
-                            color="red"
-                            size="sm"
-                            onClick={() => removeFromCart(item.foodItem.id)}
-                          >
-                            <IconTrash size={14} />
-                          </ActionIcon>
+                          {!item.isExisting && (
+                            <ActionIcon
+                              variant="subtle"
+                              color="red"
+                              size="sm"
+                              onClick={() => removeFromCart(item.foodItem.id)}
+                            >
+                              <IconTrash size={14} />
+                            </ActionIcon>
+                          )}
                         </div>
 
                         <div className="mt-1.5 flex items-center justify-between">
                           <div className="flex items-center gap-1">
-                            <ActionIcon
-                              variant="light"
-                              size="sm"
-                              onClick={() => updateQty(item.foodItem.id, -1)}
-                            >
-                              <IconMinus size={12} />
-                            </ActionIcon>
-                            <span className="w-6 text-center text-sm font-semibold">
-                              {item.quantity}
-                            </span>
-                            <ActionIcon
-                              variant="light"
-                              size="sm"
-                              onClick={() => updateQty(item.foodItem.id, 1)}
-                            >
-                              <IconPlus size={12} />
-                            </ActionIcon>
-                            <ActionIcon
-                              variant={openNotes.has(item.foodItem.id) ? 'light' : 'subtle'}
-                              color={openNotes.has(item.foodItem.id) ? 'blue' : 'gray'}
-                              size="sm"
-                              onClick={() => toggleNotes(item.foodItem.id)}
-                            >
-                              <IconNotes size={12} />
-                            </ActionIcon>
+                            {!item.isExisting && (
+                              <>
+                                <ActionIcon
+                                  variant="light"
+                                  size="sm"
+                                  onClick={() => updateQty(item.foodItem.id, -1)}
+                                >
+                                  <IconMinus size={12} />
+                                </ActionIcon>
+                                <span className="w-6 text-center text-sm font-semibold">
+                                  {item.quantity}
+                                </span>
+                                <ActionIcon
+                                  variant="light"
+                                  size="sm"
+                                  onClick={() => updateQty(item.foodItem.id, 1)}
+                                >
+                                  <IconPlus size={12} />
+                                </ActionIcon>
+                                <ActionIcon
+                                  variant={openNotes.has(item.foodItem.id) ? 'light' : 'subtle'}
+                                  color={openNotes.has(item.foodItem.id) ? 'blue' : 'gray'}
+                                  size="sm"
+                                  onClick={() => toggleNotes(item.foodItem.id)}
+                                >
+                                  <IconNotes size={12} />
+                                </ActionIcon>
+                              </>
+                            )}
+                            {item.isExisting && (
+                              <span className="text-xs text-gray-400">x{item.quantity}</span>
+                            )}
                           </div>
                           <span className="text-sm font-medium">
                             {currency(Number(item.foodItem.price) * item.quantity)}
@@ -464,11 +522,22 @@ export default function Page() {
                   <Button
                     fullWidth
                     loading={submitting}
-                    disabled={cart.length === 0 || !selectedTable}
+                    disabled={submitDisabled}
                     onClick={handleSubmit}
                   >
-                    {existingOrderId ? 'Tambah ke Pesanan' : 'Buat Pesanan'}
+                    {submitLabel}
                   </Button>
+                  {existingOrderId && tableStatus === 'occupied' && (
+                    <Button
+                      fullWidth
+                      variant="light"
+                      color="red"
+                      loading={closing}
+                      onClick={handleCloseOrder}
+                    >
+                      Tutup Pesanan
+                    </Button>
+                  )}
                   <Button fullWidth variant="light" color="gray" onClick={() => navigate('/order')}>
                     Batal
                   </Button>

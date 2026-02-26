@@ -80,7 +80,7 @@ export default function Page() {
         handleSetAvailable(table);
         break;
       case 'occupied':
-        navigate(`/order/${table.id}`);
+        navigate(`/order/create?table_id=${table.id}`);
         break;
       case 'reserved':
         navigate(`/order/create?table_id=${table.id}`);
