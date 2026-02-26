@@ -47,14 +47,11 @@ export default function Page() {
     <AppPage
       hasAccess
       title="Detail Pesanan | POS"
-      breadcrumbs={[
-        { title: 'List Pesanan', link: '/order' },
-        { title: 'Detail Pesanan' },
-      ]}
+      breadcrumbs={[{ title: 'List Pesanan', link: '/order' }, { title: 'Detail Pesanan' }]}
     >
       <AppViewState viewState={viewState} callBackError={() => window.location.reload()}>
         {order && (
-          <div className="p-4 lg:p-6">
+          <div className="p-4">
             {/* Header */}
             <div className="mb-4 flex items-center justify-between">
               <Text fw={700} size="xl">
