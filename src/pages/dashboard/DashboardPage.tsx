@@ -39,10 +39,30 @@ export default function Page() {
     void load();
   }, []);
 
+  async function handleSetAvailable(table: Table) {
+    const confirmed = await modalUtils.confirm(
+      `Apakah Anda yakin ingin mengaktifkan meja ${table.number}?`
+    );
+    if (!confirmed) return;
+
+    const loading = modalUtils.loading();
+    try {
+      await client().put(api.updateTableStatus(table.id), { status: 'available' });
+      loading.close();
+      toastUtils.success({ message: `Meja ${table.number} berhasil diaktifkan` });
+      setTables((prev) =>
+        prev.map((t) => (t.id === table.id ? { ...t, status: 'available' as const } : t))
+      );
+    } catch (error) {
+      loading.close();
+      parseError(error);
+    }
+  }
+
   async function handleSetInactive(table: Table) {
     const loading = modalUtils.loading();
     try {
-      await client().patch(api.updateTableStatus(table.id), { status: 'inactive' });
+      await client().put(api.updateTableStatus(table.id), { status: 'inactive' });
       loading.close();
       toastUtils.success({ message: `Meja ${table.number} dinonaktifkan` });
       setTables((prev) =>
@@ -57,10 +77,7 @@ export default function Page() {
   function handleTableClick(table: Table) {
     switch (table.status) {
       case 'inactive':
-        modalUtils.info({
-          title: 'Meja Tidak Aktif',
-          message: `Meja ${table.number} sedang tidak aktif dan tidak dapat digunakan.`,
-        });
+        handleSetAvailable(table);
         break;
       case 'occupied':
         navigate(`/order/${table.id}`);
@@ -154,7 +171,7 @@ export default function Page() {
               </div>
 
               {/* Quick Stats */}
-              <div className="w-48 shrink-0">
+              <div className="w-[20%] min-w-48 shrink-0">
                 <Text fw={600} size="sm" className="mb-2">
                   Quick Stats
                 </Text>
