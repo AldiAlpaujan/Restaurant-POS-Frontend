@@ -4,6 +4,7 @@ import { IconLayoutGrid, IconList } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import AppPage from '@/layouts/AppPage';
 import AppViewState, { type AppViewStateType } from '@/layouts/AppViewState';
+import authToken from '@/lib/auth-token';
 import client, { api } from '@/lib/http-client';
 import { parseError } from '@/lib/http-handlers';
 import { modalUtils } from '@/lib/modal-utlis';
@@ -75,6 +76,9 @@ export default function Page() {
   }
 
   function handleTableClick(table: Table) {
+    const isLogged = authToken.isLogged();
+    if (!isLogged) return;
+
     switch (table.status) {
       case 'inactive':
         handleSetAvailable(table);
