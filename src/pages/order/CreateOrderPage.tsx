@@ -1,3 +1,3 @@
-export default function CreateOrderPage() {
+export default function Page() {
   return <div>Create Order</div>;
 }

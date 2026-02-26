@@ -11,7 +11,7 @@ import { toastUtils } from '@/lib/toast-utils';
 import type { Order } from '@/types/order';
 import { orderGridColumn } from './grid-column/order-grid-column';
 
-export default function ListOrderPage() {
+export default function Page() {
   const navigate = useNavigate();
   const source = useDataGridSource<Order>({
     url: api.getOrders,
